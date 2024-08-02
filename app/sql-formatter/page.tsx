@@ -1,11 +1,15 @@
 'use client'
 import { useState } from 'react'
+import { format } from 'sql-formatter'
 
 export default function Page() {
   const [inputText, setInputText] = useState('')
 
   function formatText(inputText: string) {
-    let inputTextArray = inputText.split('\n')
+    let inputTextArray = format(inputText, {
+      language: 'tsql',
+      tabWidth: 4
+    }).split('\n')
     inputTextArray = inputTextArray.map((line) => {
       return `"${line}" + _`
     })
