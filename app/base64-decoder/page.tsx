@@ -1,26 +1,13 @@
 'use client'
 import { useState } from 'react'
-import { format } from 'sql-formatter'
+import { decode } from 'js-base64'
 
 export default function Page() {
   const [inputText, setInputText] = useState('')
   const [formatVB, setFormatVB] = useState(false)
 
-  function formatText(inputText: string) {
-    try {
-      let formattedInputText = format(inputText, {
-        language: 'tsql',
-        tabWidth: 4
-      }).split('\n')
-
-      if (formatVB) {
-        formattedInputText = formattedInputText.map((line) => {
-          return `"${line}" + _`
-        })
-      }
-
-      return formattedInputText.join('\n')
-    } catch (error) {}
+  function decodeText(inputText: string) {
+    return decode(inputText)
   }
 
   return (
@@ -33,13 +20,12 @@ export default function Page() {
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}
         ></textarea>
-        <div
-          id=""
-          className="w-1/2 h-full rounded-sm disabled:bg-slate-200"
-        ></div>
+        <div id="" className="w-1/2 h-full rounded-s bg-white">
+          {decodeText(inputText)}
+        </div>
       </div>
       <div className="flex justify-start gap-8 mt-8 items-center w-full">
-        <label htmlFor="format-vb">
+        <label htmlFor="format-vb" className="hidden">
           <input
             type="checkbox"
             name=""
@@ -53,7 +39,7 @@ export default function Page() {
           className="bg-slate-500 text-slate-100 rounded-md px-5 py-2"
           onClick={() => setInputText(inputText)}
         >
-          format
+          decode
         </button>
       </div>
     </div>
