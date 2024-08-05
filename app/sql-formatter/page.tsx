@@ -6,15 +6,19 @@ export default function Page() {
   const [inputText, setInputText] = useState('')
 
   function formatText(inputText: string) {
-    let inputTextArray = format(inputText, {
-      language: 'tsql',
-      tabWidth: 4
-    }).split('\n')
-    inputTextArray = inputTextArray.map((line) => {
-      return `"${line}" + _`
-    })
-    const formattedText = inputTextArray.join('\n')
-    return formattedText
+    let inputTextArray: string[] = []
+    try {
+      inputTextArray = format(inputText, {
+        language: 'tsql',
+        tabWidth: 4
+      }).split('\n')
+
+      inputTextArray = inputTextArray.map((line) => {
+        return `"${line}" + _`
+      })
+      const formattedText = inputTextArray.join('\n')
+      return formattedText
+    } catch (error) {}
   }
 
   return (
