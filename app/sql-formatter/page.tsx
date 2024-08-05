@@ -4,20 +4,22 @@ import { format } from 'sql-formatter'
 
 export default function Page() {
   const [inputText, setInputText] = useState('')
+  const [formatVB, setFormatVB] = useState(false)
 
   function formatText(inputText: string) {
-    let inputTextArray: string[] = []
     try {
-      inputTextArray = format(inputText, {
+      let formattedInputText = format(inputText, {
         language: 'tsql',
         tabWidth: 4
       }).split('\n')
 
-      inputTextArray = inputTextArray.map((line) => {
-        return `"${line}" + _`
-      })
-      const formattedText = inputTextArray.join('\n')
-      return formattedText
+      if (formatVB) {
+        formattedInputText = formattedInputText.map((line) => {
+          return `"${line}" + _`
+        })
+      }
+
+      return formattedInputText.join('\n')
     } catch (error) {}
   }
 
@@ -39,9 +41,24 @@ export default function Page() {
           disabled
         ></textarea>
       </div>
-      <button className="bg-slate-500 text-slate-100 mt-8 rounded-md px-5 py-2 hidden">
-        format
-      </button>
+      <div className="flex justify-start gap-8 mt-8 items-center w-full">
+        <label htmlFor="format-vb">
+          <input
+            type="checkbox"
+            name=""
+            id="format-vb"
+            checked={formatVB}
+            onChange={() => setFormatVB(!formatVB)}
+          />
+          <span className="ml-2">Format VB</span>
+        </label>
+        <button
+          className="bg-slate-500 text-slate-100 rounded-md px-5 py-2"
+          onClick={() => setInputText(inputText)}
+        >
+          format
+        </button>
+      </div>
     </div>
   )
 }
